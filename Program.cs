@@ -1,4 +1,4 @@
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -23,6 +23,22 @@ app.MapGet("/children/{id}", (int id) =>
     return Results.Json(child);
 });
 
+app.MapPost("/children", (Child child) =>
+{
+
+    child.Id = bd.Any() ? bd.Max(c => c.Id) + 1 : 1;
+    bd.Add(child);
+    return Results.Created($"/children/{child.Id}", child);
+});
+
+app.MapDelete("/children/{id}", (int id) =>
+{
+    var child = bd.FirstOrDefault(c => c.Id == id);
+    if (child is null) return Results.NotFound("Ребенок не найден");
+
+    bd.Remove(child);
+    return Results.Ok("Ребенок удален");
+});
 app.Run();
 
 class Child
