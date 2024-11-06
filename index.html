@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web API - Регистрация детей</title>
+</head>
+<body>
+    <h1>Работа с Web API для регистрации детей</h1>
+
+    <h2>Добавить нового ребенка</h2>
+    <form id="addChildForm">
+        <label for="fullName">ФИО:</label><br>
+        <input type="text" id="fullName" name="fullName"><br>
+        <label for="age">Возраст:</label><br>
+        <input type="number" id="age" name="age"><br>
+        <label for="squad">Секция:</label><br>
+        <input type="text" id="squad" name="squad"><br>
+        <label for="hobby">Хобби:</label><br>
+        <input type="text" id="hobby" name="hobby"><br>
+        <label for="parentContact">Контакт родителя:</label><br>
+        <input type="text" id="parentContact" name="parentContact"><br>
+        <button type="submit">Добавить ребенка</button>
+    </form>
+
+    <h2>Получить информацию о ребенке</h2>
+    <form id="getChildForm">
+        <label for="childId">ID ребенка:</label><br>
+        <input type="number" id="childId" name="childId"><br>
+        <button type="submit">Получить информацию</button>
+    </form>
+
+    <h2>Обновить информацию о ребенке</h2>
+    <form id="updateChildForm">
+        <label for="updateId">ID ребенка:</label><br>
+        <input type="number" id="updateId" name="updateId"><br>
+        <label for="updateFullName">ФИО:</label><br>
+        <input type="text" id="updateFullName" name="updateFullName"><br>
+        <label for="updateAge">Возраст:</label><br>
+        <input type="number" id="updateAge" name="updateAge"><br>
+        <label for="updateSquad">Секция:</label><br>
+        <input type="text" id="updateSquad" name="updateSquad"><br>
+        <label for="updateHobby">Хобби:</label><br>
+        <input type="text" id="updateHobby" name="updateHobby"><br>
+        <label for="updateParentContact">Контакт родителя:</label><br>
+        <input type="text" id="updateParentContact" name="updateParentContact"><br>
+        <button type="submit">Обновить</button>
+    </form>
+
+    <h2>Удалить ребенка</h2>
+    <form id="deleteChildForm">
+        <label for="deleteId">ID ребенка:</label><br>
+        <input type="number" id="deleteId" name="deleteId"><br>
+        <button type="submit">Удалить</button>
+    </form>
+
+    <script>
+        document.getElementById("addChildForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const fullName = document.getElementById("fullName").value;
+            const age = parseInt(document.getElementById("age").value);
+            const squad = document.getElementById("squad").value;
+            const hobby = document.getElementById("hobby").value;
+            const parentContact = document.getElementById("parentContact").value;
+
+            fetch("http://localhost:5119/children", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    fullName, age, squad, hobby, parentContact, isConfirmed: "Подтверждено"
+                })
+            }).then(response => response.json())
+                .then(data => alert("Ребенок добавлен: " + data.id));
+        });
+
+        document.getElementById("getChildForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById("childId").value);
+
+            fetch(`http://localhost:5119/children/${id}`)
+                .then(response => response.json())
+                .then(data => alert("Информация о ребенке: " + JSON.stringify(data)));
+        });
+
+        document.getElementById("updateChildForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById("updateId").value);
+            const fullName = document.getElementById("updateFullName").value;
+            const age = parseInt(document.getElementById("updateAge").value);
+            const squad = document.getElementById("updateSquad").value;
+            const hobby = document.getElementById("updateHobby").value;
+            const parentContact = document.getElementById("updateParentContact").value;
+
+            fetch(`http://localhost:5119/children/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    fullName, age, squad, hobby, parentContact, isConfirmed: "Подтверждено"
+                })
+            }).then(response => response.json())
+                .then(data => alert("Информация обновлена: " + JSON.stringify(data)));
+        });
+
+        document.getElementById("deleteChildForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById("deleteId").value);
+
+            fetch(`http://localhost:5119/children/${id}`, {
+                method: "DELETE"
+            }).then(response => response.ok ? alert("Ребенок удален") : alert("Ошибка удаления"));
+        });
+    </script>
+</body>
+</html>

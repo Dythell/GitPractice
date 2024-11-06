@@ -1,7 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        policy => policy.AllowAnyOrigin()
+                         .AllowAnyMethod()
+                         .AllowAnyHeader());
+});
+
 var app = builder.Build();
 
-
+app.UseCors("AllowAnyOrigin");
 
 
 List<Child> bd = new List<Child>()
