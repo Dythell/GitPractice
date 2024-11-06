@@ -1,13 +1,30 @@
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
 
-app.Run();
+
+
 List<Child> bd = new List<Child>()
 {
     new Child(1,"Логинов Кирилл Денисович",12,"2","Футбол",DateTime.Now,"Подтверждено","+79995"),
+    new Child(2,"Паролев Кирилл Денисович",12,"2","Футбол",DateTime.Now,"Подтверждено","+79995"),
 };
+
+app.MapGet("/children", () => bd);
+
+app.MapGet("/children/{id}", (int id) =>
+{
+    Child child = bd.Find(ch => ch.Id == id);
+    if (child == null)
+        return Results.NotFound("Ребенок не найден");
+
+    return Results.Json(child);
+});
+
+app.Run();
+
 class Child
 {
     private int id;
