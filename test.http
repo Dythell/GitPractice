@@ -1,0 +1,32 @@
+GET http://localhost:5119/children
+
+
+###
+POST http://localhost:5119/
+Content-Type: application/json
+
+{
+  "fullName": "Иванов Иван Иванович",
+  "age": 10,
+  "squad": "3",
+  "hobby": "Плавание",
+  "isConfirmed": "Подтверждено",
+  "parentContact": "+79991234567"
+}
+
+###
+PUT http://localhost:5119/1
+Content-Type: application/json
+
+{
+  "FullName": "Логинов Кирилл Денисович",
+  "Age": 12,
+  "Squad": "3",
+  "Hobby": "Футбол",
+  "IsConfirmed": "Не Подтверждено",
+  "ParentContact": "+79999999999"
+}
+
+###
+DELETE http://localhost:5119/children/1
+Content-Type: application/json
